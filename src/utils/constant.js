@@ -13,5 +13,6 @@ export const Const = {
     refetchChats: "REFETCH_CHATS",
     newAttachment: "NEW_ATTACHMENT",
     newMessageAlert: "NEW_MESSAGE_ALERT",
+    newFriendRequest: "NEW_FRIEND_REQUEST",
   },
 };

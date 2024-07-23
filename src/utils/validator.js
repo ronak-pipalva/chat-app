@@ -3,7 +3,6 @@ import createError from "./createError.js";
 
 const handleValidator = (req, res, next) => {
   const errros = validationResult(req);
-  console.log("errros>>>", errros);
   const errrosMessages = errros
     .array()
     .map((err) => err.msg)
@@ -64,11 +63,27 @@ const sendAttachmentValidator = () => [
 ];
 
 const getMessagesValidator = () => [
-  param("id", "plese enter chat ID").notEmpty(),
+  param("id", "please enter chat ID").notEmpty(),
 ];
 
-const chatIdValidator = () => [param("id", "plese enter chat ID").notEmpty()];
+const chatIdValidator = () => [param("id", "please enter chat ID").notEmpty()];
 
+const sendFriendRequestValidator = () => [
+  body("receiverId", "please enter receiver user Id").notEmpty(),
+];
+
+const acceptFriendRequestValidator = () => [
+  body("requestId", "please enter request Id").notEmpty(),
+  body("isAccepted")
+    .notEmpty()
+    .withMessage("please enter isAccepted flag")
+    .isBoolean()
+    .withMessage("isAccepted must be boolena value"),
+];
+
+const adminLoginValidator = () => [
+  body("secretKey", "please enter admin secretKey").notEmpty(),
+];
 export {
   handleValidator,
   registerValidator,
@@ -80,4 +95,7 @@ export {
   sendAttachmentValidator,
   getMessagesValidator,
   chatIdValidator,
+  sendFriendRequestValidator,
+  acceptFriendRequestValidator,
+  adminLoginValidator,
 };

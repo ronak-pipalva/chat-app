@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import userRoute from "./routes/user.js";
 import chatRoute from "./routes/chat.js";
+import adminRoutes from "./routes/admin.js";
 import { createChats, createMessages, createUsers } from "./utils/seeders.js";
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(morgan("dev"));
 
 app.use("/user", userRoute);
 app.use("/chat", chatRoute);
+app.use("/admin", adminRoutes);
 
 app.listen(config.port, async () => {
   await connectDB();

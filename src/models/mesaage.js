@@ -31,4 +31,4 @@ const schema = new Schema(
   }
 );
 
-export const Message = mongoose.model("message", schema);
+export const Message = mongoose.model("Message", schema);

@@ -1,8 +1,14 @@
-import { apiResponse, tryCatch } from "../utils/utilityFunctions.js";
+import {
+  apiResponse,
+  emitEvent,
+  getOtherMember,
+  tryCatch,
+} from "../utils/utilityFunctions.js";
 import User from "../models/user.js";
 import { Const } from "../utils/constant.js";
 import createError from "../utils/createError.js";
 import { Chat } from "../models/chat.js";
+import { FriendRequest } from "../models/friendRequest.js";
 
 const newUser = tryCatch(async (req, res, next) => {
   const avatar = {
@@ -75,7 +81,7 @@ const getMyProfile = tryCatch(async (req, res, next) => {
     .json(apiResponse(true, "user detail fetch successfully", user));
 });
 
-const searchUser = async (req, res, next) => {
+const searchUser = tryCatch(async (req, res, next) => {
   const chat = await Chat.find({ groupChat: false, members: req.userId });
 
   const { name } = req.query;
@@ -93,5 +99,100 @@ const searchUser = async (req, res, next) => {
     avatar: avatar.url,
   }));
   res.status(200).json(apiResponse(true, "search user list", users));
+});
+
+const sendFriendRequest = tryCatch(async (req, res, next) => {
+  const { receiverId } = req.body;
+
+  const request = await FriendRequest.findOne({
+    $or: [
+      { sender: req.userId, receiver: receiverId },
+      { sender: receiverId, receiver: req.userId },
+    ],
+  });
+
+  if (request) {
+    return next(new createError(400, "Friend Request already sent"));
+  }
+
+  await FriendRequest.create({ sender: req.userId, receiver: receiverId });
+
+  emitEvent(req, Const.events.newFriendRequest, [receiverId]);
+
+  res.status(200).json(apiResponse(true, "Friend Request sent"));
+});
+
+const acceptFriendRequest = tryCatch(async (req, res, next) => {
+  const { requestId, isAccepted } = req.body;
+
+  const request = await FriendRequest.findById(requestId)
+    .populate("sender", "name")
+    .populate("receiver", "name");
+
+  if (!request) {
+    return next(new createError(404, "Friend Request not found"));
+  }
+  if (request.receiver._id.toString() !== req.userId.toString()) {
+    return next(
+      new createError(404, "you are not authorize to accept request")
+    );
+  }
+  if (!isAccepted) {
+    await request.deleteOne();
+    res.status(200).json(apiResponse(true, "Friend Request rejected"));
+  }
+
+  const members = [request.sender._id, request.receiver._id];
+
+  await Promise.all([
+    Chat.create({
+      members,
+      name: `${request.sender.name}-${request.receiver.name}`,
+    }),
+    request.deleteOne(),
+  ]);
+
+  emitEvent(req, Const.events.refetchChats, members);
+
+  res.status(200).json(apiResponse(true, "Friend Request accepted "));
+});
+
+const getAllNotifications = tryCatch(async (req, res, next) => {
+  const request = await FriendRequest.find({ receiver: req.userId })
+    .populate("sender", "name avatar")
+    .select("sender");
+
+  res
+    .status(200)
+    .json(apiResponse(true, "notifications fetch successfully", request));
+});
+
+const getFriends = tryCatch(async (req, res, next) => {
+  const chats = await Chat.find({
+    groupChat: false,
+    members: req.userId,
+  }).populate("members", "name avatar");
+
+  const friends = chats.map(({ members }) => {
+    const otherMember = getOtherMember(members, req.userId);
+    return {
+      _id: otherMember[0]._id,
+      name: otherMember[0].name,
+      avatar: otherMember[0].avatar.url,
+    };
+  });
+  res
+    .status(200)
+    .json(apiResponse(true, "friends fetch successfully", friends));
+});
+export {
+  newUser,
+  login,
+  logout,
+  getMyProfile,
+  searchUser,
+  sendFriendRequest,
+  acceptFriendRequest,
+  getAllNotifications,
+  getFriends,
 };
-export { newUser, login, logout, getMyProfile, searchUser };
