@@ -1,0 +1,427 @@
+{
+	"info": {
+		"_postman_id": "81d4feed-c3df-467f-8633-0bb2c23836ca",
+		"name": "chat-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "32224872"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "test4",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Admin@123",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "bio",
+									"value": "walking in his diven path",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								}
+							]
+						},
+						"url": "http://localhost:3333/user/new"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{    \"username\":\"Alexandro_Zemlak13\",\n    \"password\":\"Admin@123\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:3333/user/logout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get my profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/user/me"
+					},
+					"response": []
+				},
+				{
+					"name": "search user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/user/search?name=son",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"user",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "son"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send friend request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"receiverId\":\"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/user/send-request"
+					},
+					"response": []
+				},
+				{
+					"name": "accept friend request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requestId\":\"669f3a52a28f03aec0f3ab0a\",\n    \"isAccepted\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/user/accept-request"
+					},
+					"response": []
+				},
+				{
+					"name": "get my notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/user/notifications"
+					},
+					"response": []
+				},
+				{
+					"name": "get my friends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/user/friends"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chat",
+			"item": [
+				{
+					"name": "create group chat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Best friends\",\n    \"members\":[\"669a1be70c378a3d98334404\",\"669a1be20c378a3d98334401\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/chat/new"
+					},
+					"response": []
+				},
+				{
+					"name": "get my chats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/chat/my-chats"
+					},
+					"response": []
+				},
+				{
+					"name": "get my groups",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/chat/my-groups"
+					},
+					"response": []
+				},
+				{
+					"name": "add member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"chatId\":\"6698fcbe95217b06f385ffd5\",\n    \"members\":[\"dfsfsdfzfs\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/chat/add-members"
+					},
+					"response": []
+				},
+				{
+					"name": "remove member",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"chatId\":\"6698fcbe95217b06f385ffd5\",\n    \"memberId\":\"6698ae20a41f20ee3b59f3ed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/chat/remove-member"
+					},
+					"response": []
+				},
+				{
+					"name": "leave group",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:3333/chat/leave-group/"
+					},
+					"response": []
+				},
+				{
+					"name": "send attachment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "chatId",
+									"value": "669a449b260dec66483d6a4f",
+									"type": "text"
+								},
+								{
+									"key": "files",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": "http://localhost:3333/chat/message"
+					},
+					"response": []
+				},
+				{
+					"name": "get chat details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3333/chat/669a449b260dec66483d6a4f?populate=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"chat",
+								"669a449b260dec66483d6a4f"
+							],
+							"query": [
+								{
+									"key": "populate",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rename group",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"3 ideot\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/chat/669a449b260dec66483d6a4f"
+					},
+					"response": []
+				},
+				{
+					"name": "delete chat",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:3333/chat/669dff4a7c828cd149ce934a"
+					},
+					"response": []
+				},
+				{
+					"name": "get messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/chat/message/669a449b260dec66483d6a4f"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/admin/users"
+					},
+					"response": []
+				},
+				{
+					"name": "get chats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/admin/chats"
+					},
+					"response": []
+				},
+				{
+					"name": "get messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/admin/messages"
+					},
+					"response": []
+				},
+				{
+					"name": "dashboard stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/admin/stats"
+					},
+					"response": []
+				},
+				{
+					"name": "admin login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"secretKey\":\"sdffsdasddsfsdfdwweweferaf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:3333/admin/verify"
+					},
+					"response": []
+				},
+				{
+					"name": "admin logout",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:3333/admin/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "admin verify",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:3333/admin"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

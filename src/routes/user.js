@@ -19,10 +19,17 @@ import {
   sendAttachmentValidator,
   sendFriendRequestValidator,
 } from "../utils/validator.js";
+import upload from "../middlewares/multer.js";
 
 const userRoute = express.Router();
 
-userRoute.post("/new", registerValidator(), handleValidator, newUser);
+userRoute.post(
+  "/new",
+  upload.fields([{ name: "avatar", maxCount: 1 }]),
+  registerValidator(),
+  handleValidator,
+  newUser
+);
 userRoute.post("/login", loginValidator(), handleValidator, login);
 
 //after here user must be logged

@@ -14,5 +14,8 @@ export const Const = {
     newAttachment: "NEW_ATTACHMENT",
     newMessageAlert: "NEW_MESSAGE_ALERT",
     newFriendRequest: "NEW_FRIEND_REQUEST",
+    newMessage: "NEW_MESSAGE",
+    startTyping: "START_TYPING",
+    stopTyping: "STOP_TYPING",
   },
 };

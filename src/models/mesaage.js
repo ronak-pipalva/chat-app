@@ -13,7 +13,7 @@ const schema = new Schema(
       require: true,
     },
     content: {
-      typeof: String,
+      type: String,
     },
     attachments: [
       {

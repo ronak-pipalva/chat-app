@@ -8,6 +8,7 @@ import {
   emitEvent,
   getOtherMember,
   tryCatch,
+  uploadFilesToCloudinary,
 } from "../utils/utilityFunctions.js";
 import { Message } from "../models/mesaage.js";
 
@@ -223,16 +224,13 @@ const sendAttachment = tryCatch(async (req, res, next) => {
     User.findById(req.userId).select("name"),
   ]);
 
-  const files = req.files || [];
+  const localFilePaths = req.files.map((item) => item.path);
 
-  if (files.length < 1) {
-    return next(new createError(400, "please provide attachment"));
-  }
-  const attachment = [];
+  const attachment = await uploadFilesToCloudinary(localFilePaths);
 
   const messageForDB = {
     content: "",
-    attachment,
+    attachments: attachment,
     sender: me._id,
     chat: chatId,
   };

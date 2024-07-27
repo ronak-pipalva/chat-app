@@ -12,13 +12,17 @@ const handleValidator = (req, res, next) => {
     return next();
   } else next(new createError(400, errrosMessages));
 };
-
 const registerValidator = () => [
-  body("name", "please enter name").notEmpty(),
-  body("username", "please enter username").notEmpty(),
-  body("password", "please enter password").notEmpty(),
-  body("bio", "please enter bio").notEmpty(),
-  check("avatar", "please upload avatar"),
+  body("name").notEmpty().withMessage("Please enter name"),
+  body("username").notEmpty().withMessage("Please enter username"),
+  body("password").notEmpty().withMessage("Please enter password"),
+  body("bio").notEmpty().withMessage("Please enter bio"),
+  body("avatar").custom((value, { req }) => {
+    if (!req.files || !req.files.avatar) {
+      throw new Error("Please upload avatar");
+    }
+    return true;
+  }),
 ];
 
 const loginValidator = () => [
@@ -55,11 +59,11 @@ const leaveGroupValidator = () => [
 
 const sendAttachmentValidator = () => [
   body("chatId", "please enter chatId").notEmpty(),
-  check("files")
-    .notEmpty()
-    .withMessage("please upload attachments")
-    .isArray({ min: 1, max: 5 })
-    .withMessage("attachments must be 1-5"),
+  body("files")
+    .custom((value, { req }) => req.files && req.files.length > 0)
+    .withMessage("Please upload attachments")
+    .custom((value, { req }) => req.files.length <= 5)
+    .withMessage("Attachments must be 1-5"),
 ];
 
 const getMessagesValidator = () => [

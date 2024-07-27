@@ -3,6 +3,7 @@ import {
   emitEvent,
   getOtherMember,
   tryCatch,
+  uploadFilesToCloudinary,
 } from "../utils/utilityFunctions.js";
 import User from "../models/user.js";
 import { Const } from "../utils/constant.js";
@@ -11,10 +12,10 @@ import { Chat } from "../models/chat.js";
 import { FriendRequest } from "../models/friendRequest.js";
 
 const newUser = tryCatch(async (req, res, next) => {
-  const avatar = {
-    public_id: "sdvasfs",
-    url: "sdvsdvs",
-  };
+  const localPath = req.files.avatar.map((item) => item.path);
+
+  const attachment = await uploadFilesToCloudinary(localPath);
+
   const { name, username, password, bio } = req.body;
 
   const existUser = await User.findOne({ username });
@@ -22,7 +23,13 @@ const newUser = tryCatch(async (req, res, next) => {
   if (existUser) {
     return next(new createError(400, "user alredy exist"));
   }
-  const userData = await User.create({ name, username, password, bio, avatar });
+  const userData = await User.create({
+    name,
+    username,
+    password,
+    bio,
+    avatar: attachment[0],
+  });
 
   const accessToken = await userData.generateToken();
 
